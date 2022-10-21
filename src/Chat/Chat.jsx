@@ -21,6 +21,7 @@ const Chat = ({isActive, setActive, header, messages}) => {
             <ul>
                 <li>{message.name}</li>
                 <li>{message.text}</li>
+                <li></li>
             </ul>
             )}
         </div>
