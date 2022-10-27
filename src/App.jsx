@@ -1,15 +1,32 @@
-import classNames from "classnames";
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { postRequest, requestURL } from "./Api";
 import "./App.css";
-import Chat from "./Chat/Chat";
-import Menu from "./Menu/Menu"
+import Chat from "./Components/Chat/Chat";
+import Menu from "./Components/Menu/Menu"
 
-const items = [{value: 'Главная', href: '/main', icon: 'x'}, {value: 'Услуги', href: '/service', icon: 'x'}, {value: 'Магазин', href: '/shop', icon: 'x'}, {value: 'О нас', href: '/about', icon: 'x'}, ];
-const messages = [{id: 1, name: 'Sasha', text: 'sssssoooooqaaaaa'}, {id: 2, name: 'Masha', text: 'sssssoooooqaaaaa'}]
+const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 3, value: 'Услуги', href: '/service', icon: 'x'}, {id: 4, value: 'Магазин', href: '/shop', icon: 'x'}, {id: 5, value: 'О нас', href: '/about', icon: 'x'}, ];
 
 function App () {
     const [isMenuActive, setMenuActive] = useState(false);
     const [isChatActive, setChatActive] = useState(false);
+    const [userMessages, setUserMessages] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            const resp = await fetch(requestURL, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+            });
+        const variable = await resp.json();
+        console.log(variable);
+        setUserMessages(variable.response)
+        })() 
+    }, [])
+
 
     return (
         <div className="app">
@@ -61,7 +78,7 @@ function App () {
                 <button className='chat-btn' onClick={() => setChatActive(!isChatActive)}>Chat</button>
             </main>
             <Menu isActive={isMenuActive} setActive={setMenuActive} header={'Бургер меню'} items={items}/>
-            <Chat isActive={isChatActive} setActive={setChatActive} header={'Чат поддержки'} messages={messages}/>
+            <Chat isActive={isChatActive} setActive={setChatActive} header={'Чат поддержки'} messages={userMessages} setUserMessages={setUserMessages}/>
         </div>
     )
 }

@@ -11,6 +11,7 @@ nav {
     z-index: 50;
     display: flex;
     align-items: center;
+    background-color: #b08e9d;
   }
   
   main {
@@ -63,7 +64,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ee6e73;;
+    background-color: #b08e9d;
     opacity: 0.6;
     width: 50px;
     height: 50px;

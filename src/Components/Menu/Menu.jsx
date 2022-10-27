@@ -8,9 +8,9 @@ const Menu = ({header, items, isActive, setActive}) => {
             <div className="blur"/>
             <div className="menu__content" onClick={e => e.stopPropagation()}>
                 <div className="menu__header">{header}</div>
-                <ul>
+                <ul className="menu__list">
                     {items.map(item => 
-                        <li>
+                        <li key={item.id}>
                             <a href={item.href}>{item.value}</a>
                             <span className="menu__icons">{item.icon}</span>
                         </li>
