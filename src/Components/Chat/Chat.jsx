@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { postRequest, requestURL } from '../../Api';
 import './Chat.css';
 
-
-const Chat = ({isActive, setActive, header, messages, setUserMessages}) => {
+const Chat = ({isActive, setActive, header, messages,}) => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
 
@@ -20,24 +20,31 @@ const Chat = ({isActive, setActive, header, messages, setUserMessages}) => {
       name,
       message
     }
-    setUserMessages([...messages , newMessage]);
+    if (newMessage.name === '' || newMessage.message === '') {
+      alert('Заполни, ск, поля!')
+    } else {
+      postRequest(requestURL, newMessage)
+    }
     setMessage('');
     setName('');
   } 
 
-  
+
   return (
     <div className={classNames('chat', {'active': isActive})}>
       <div className="chat__content">
         <div className="chat__header">{header}</div>
-        <div className="chat__message-list" ref={container}>
+        <ul className="chat__message-list" ref={container}>
             {messages.map((message) => 
-            <ul className={classNames('chat__user-style-message', {'chat__admin-style-message': name === 'admin'})} key={message.name + message.message}>
-                <li className='chat__user-name'>{message.name}</li>
-                <li className='chat__user-message'>{message.message}</li>
-            </ul>
+            <li className={classNames({
+              'chat__user-style-message': message.name !== 'admin',
+              'chat__admin-style-message': message.name === 'admin'})}
+               key={message.id}>
+                <div className='chat__user-name'>{message.name}</div>
+                <div className='chat__user-message'>{message.message}</div>
+            </li>
             )}
-        </div>
+        </ul>
         <form className='chat__message-form'>
           <input 
               className='chat__name-input'
@@ -51,7 +58,8 @@ const Chat = ({isActive, setActive, header, messages, setUserMessages}) => {
               onChange={e => setMessage(e.target.value)}
               value={message}
               type='text' 
-              placeholder='Сообщение...'/>
+              placeholder='Сообщение...'
+              />
           <button className='chat__submit-btn' type='submit' onClick={addNewMessage}>Отправить</button>
         </form>
       </div>

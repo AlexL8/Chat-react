@@ -16,10 +16,13 @@ nav {
   
   main {
     padding: 50px;
+    height: 100vh;
+    background: url(./Images/minimalist-digital-art-mountain-landscape-night-moon-hd-wallpaper-1920x1080-7.jpg) center / cover no-repeat;
   }
   
   p {
     margin: 20px;
+    color: lightgrey;
   }
   
   .burger-btn {

@@ -37,7 +37,7 @@ ol[class] {
 .chat__header {
     text-align: center;
     width: 100%;
-    font-size: 1.2rem;
+    font-size: 1rem;
     padding: 3px 0;
     border-bottom: 1px solid black;
 }
@@ -56,12 +56,23 @@ ol[class] {
     }
 
 .chat__admin-style-message {
+    font-size: 0.8rem;
     align-self: flex-end;
+    text-align: end;
+    background-color: #f8e6ee;
+    border-radius: 15px;
+    padding: 5px;
+    margin: 5px;
 }
 
 .chat__user-style-message {
+    font-size: 0.8rem;
     align-self: flex-start;
-    /* text-align: start; */
+    text-align: start;
+    background-color: #d6aec0;
+    border-radius: 15px;
+    padding: 5px;
+    margin: 5px;
 }
 
 .chat__message-list::-webkit-scrollbar {
