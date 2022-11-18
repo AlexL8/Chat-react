@@ -2,9 +2,10 @@ import classNames from 'classnames';
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { postRequest, requestURL } from '../../Api';
+import Loader from '../Loader/Loader';
 import './Chat.css';
 
-const Chat = ({isActive, setActive, header, messages,}) => {
+const Chat = ({isActive, setActive, header, messages, isLoading,}) => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
 
@@ -29,22 +30,34 @@ const Chat = ({isActive, setActive, header, messages,}) => {
     setName('');
   } 
 
+  console.log(isLoading); // работает
 
   return (
     <div className={classNames('chat', {'active': isActive})}>
       <div className="chat__content">
         <div className="chat__header">{header}</div>
-        <ul className="chat__message-list" ref={container}>
+        {isLoading ? <Loader/> : <ul className="chat__message-list" ref={container}>
             {messages.map((message) => 
-            <li className={classNames({
-              'chat__user-style-message': message.name !== 'admin',
-              'chat__admin-style-message': message.name === 'admin'})}
-               key={message.id}>
-                <div className='chat__user-name'>{message.name}</div>
-                <div className='chat__user-message'>{message.message}</div>
-            </li>
-            )}
-        </ul>
+              <li className={classNames({
+                'chat__user-style-message': message.name !== 'admin',
+                'chat__admin-style-message': message.name === 'admin'})}
+                key={message.id}>
+                  <div className='chat__user-name'>{message.name}</div>
+                  <div className='chat__user-message'>{message.message}</div>
+              </li>
+              )}
+        </ul>}
+        {/* <ul className="chat__message-list" ref={container}>
+            {messages.map((message) => 
+              <li className={classNames({
+                'chat__user-style-message': message.name !== 'admin',
+                'chat__admin-style-message': message.name === 'admin'})}
+                key={message.id}>
+                  <div className='chat__user-name'>{message.name}</div>
+                  <div className='chat__user-message'>{message.message}</div>
+              </li>
+              )}
+        </ul> */}
         <form className='chat__message-form'>
           <input 
               className='chat__name-input'

@@ -1,37 +1,65 @@
-import { logDOM } from "@testing-library/react";
 import React, { useState, useEffect, useRef } from "react";
-import { getRequest, requestURL } from "./Api";
+import { getRequest } from "./Api";
 import "./App.css";
 import Chat from "./Components/Chat/Chat";
-import Menu from "./Components/Menu/Menu"
+import Menu from "./Components/Menu/Menu";
 
 const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 3, value: 'Услуги', href: '/service', icon: 'x'}, {id: 4, value: 'Магазин', href: '/shop', icon: 'x'}, {id: 5, value: 'О нас', href: '/about', icon: 'x'}, ];
+export const chatContext = React.createContext()
+
 
 function App () {
     const [isMenuActive, setMenuActive] = useState(false);
     const [isChatActive, setChatActive] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [userMessages, setUserMessages] = useState([]);
+    const interval = useRef(null);
 
-    
 
-    function useInterval(fn, ms) {
-        const savedCallback = useRef();
-
-        useEffect(() => {
-            savedCallback.current = fn;
-        });
-
-        useEffect(() => {
-            async function tick() {
-               const result = await savedCallback.current();
-               setUserMessages(result)
-            }
-            let id = setInterval(tick, ms)
-            return () => clearInterval(id)
-        }, [ms]);
+    const getMessages = async () => {
+        const messagesFromServer = await getRequest();
+        setUserMessages(messagesFromServer);
     }
 
-    useInterval(getRequest, 3000)
+    const loader = async () => {
+        setIsLoading(true)
+        try {
+            await getMessages();
+        }
+        catch (err) {
+            console.log(err);
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+    
+    // Ругается на депенденсис
+    useEffect(() => {
+        interval.current = setInterval(loader, 3000);
+        return () => {
+            clearInterval(interval.current)
+        };
+    }); 
+
+    // function useInterval(fn, ms) {
+    //     const savedCallback = useRef();
+
+    //     useEffect(() => {
+    //         savedCallback.current = fn;
+    //     });
+
+    //     useEffect(() => {
+    //         async function tick() {
+    //            const result = await savedCallback.current();
+    //            setUserMessages(result)
+    //         }
+    //         let id = setInterval(tick, ms)
+    //         return () => clearInterval(id)
+    //     }, [ms]);
+    // }
+
+    // useInterval(getRequest, 3000)
 
 
     // useEffect(() => {
@@ -112,6 +140,7 @@ function App () {
                 setActive={setChatActive}
                 header={'Чат поддержки'}
                 messages={userMessages}
+                isLoading={isLoading}
             />
         </div>
     )

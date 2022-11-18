@@ -1,5 +1,3 @@
-import React from "react";
-
 export const requestURL = 'http://localhost:9000/chat/messages';
 
 
@@ -24,5 +22,5 @@ export const getRequest = async () => {
           },
     });
     const objectJson = await response.json();
-    return objectJson.response;
+    return (objectJson.response);
 }
