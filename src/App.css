@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+ol, ul {
+  list-style: none;
+  }
+
 nav {
     height: 50px;
     width: 100%;

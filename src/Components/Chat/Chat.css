@@ -4,14 +4,9 @@
     box-sizing: border-box;
 }
 
-ul[class],
-ol[class] {
-  list-style: none;
-}
-
-.activeS {
-    display: none;
-}
+ol, ul {
+    list-style: none;
+    }
 
 .chat {
     position: fixed;
