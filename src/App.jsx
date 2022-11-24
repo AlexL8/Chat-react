@@ -17,7 +17,7 @@ function App () {
     const [messageChat, setMessageChat] = useState('');
 
 
-    const getDataServerSetMessages = async () => {
+    const setDataFromRequest = async () => {
         const messagesFromServer = await getRequest();
         setUserMessages(messagesFromServer)
     }
@@ -26,7 +26,7 @@ function App () {
         setChatActive(!isChatActive)
         setIsLoadingChat(true)
         try {
-           await getDataServerSetMessages()
+           await setDataFromRequest()
         }
         catch (err) {
             console.warn('Error: ' + err)
@@ -50,7 +50,7 @@ function App () {
         }
         if (newMessage.name === '' || newMessage.message === '') return alert('Заполни, ск, поля!')
         await postRequest(requestURL, newMessage)
-        await getDataServerSetMessages()
+        await setDataFromRequest()
         setIsLoadingChat(false)
         setMessageChat('');
         setNameChat('');
