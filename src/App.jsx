@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { getRequest } from "./Api";
+import React, { useState } from "react";
+import { getRequest, postRequest, requestURL } from './Api';
 import "./App.css";
 import Chat from "./Components/Chat/Chat";
 import Menu from "./Components/Menu/Menu";
@@ -11,39 +11,58 @@ const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 
 function App () {
     const [isMenuActive, setMenuActive] = useState(false);
     const [isChatActive, setChatActive] = useState(false);
-    const [isLoadingChatOpen, setIsLoadingChatOpen] = useState(false);
+    const [isLoadingChat, setIsLoadingChat] = useState(false);
     const [userMessages, setUserMessages] = useState([]);
-    const interval = useRef(null);
+    const [nameChat, setNameChat] = useState('');
+    const [messageChat, setMessageChat] = useState('');
 
-    
-    const handleClickOpenChat = async () => {
+
+    const getDataServerSetMessages = async () => {
+        const messagesFromServer = await getRequest();
+        setUserMessages(messagesFromServer)
+    }
+
+    const openChat = async () => {
         setChatActive(!isChatActive)
-
-        if (!isChatActive) {
-            setIsLoadingChatOpen(true)
+        setIsLoadingChat(true)
         try {
-            await getMessages();
+           await getDataServerSetMessages()
         }
         catch (err) {
-            alert('Что-то пошло не так...' + err);
+            console.warn('Error: ' + err)
         }
         finally {
-            setIsLoadingChatOpen(false)
-        }
+            setIsLoadingChat(false)
         }
     }
 
-    async function getMessages () {
-        const messagesFromServer = await getRequest();
-        setUserMessages(messagesFromServer);
+    const closeChat = () => {
+        setChatActive(!isChatActive)
     }
+
+
+    const addNewMessage = async (e) => {
+        e.preventDefault()
+        setIsLoadingChat(true)
+        const newMessage = {
+          name: nameChat,
+          message: messageChat
+        }
+        if (newMessage.name === '' || newMessage.message === '') return alert('Заполни, ск, поля!')
+        await postRequest(requestURL, newMessage)
+        await getDataServerSetMessages()
+        setIsLoadingChat(false)
+        setMessageChat('');
+        setNameChat('');
+      } 
+
     
-    useEffect(() => {
-        interval.current = setInterval(getMessages, 3000);
-        return () => {
-            clearInterval(interval.current)
-        };
-    }); 
+    // useEffect(() => {
+    //     interval.current = setInterval(getMessages, 3000);
+    //     return () => {
+    //         clearInterval(interval.current)
+    //     };
+    // }); 
 
     return (
         <div className="app">
@@ -92,7 +111,7 @@ function App () {
                    sed rerum doloribus hic dolor voluptates ipsa repellat at quidem? Ea, eum inventore similique
                    cum maiores dolores doloremque?
                 </p>
-                <button className='chat-btn' onClick={handleClickOpenChat}>Chat</button>
+                <button className='chat-btn' onClick={!isChatActive ? openChat : closeChat}>Chat</button>
             </main>
             <Menu isActive={isMenuActive} setActive={setMenuActive} header={'Menu'} items={items}/>
             <Chat 
@@ -100,8 +119,13 @@ function App () {
                 setActive={setChatActive}
                 header={'Чат поддержки'}
                 messages={userMessages}
-                isLoadingChatOpen={isLoadingChatOpen}
+                isLoadingChat={isLoadingChat}
                 setUserMessages={setUserMessages}
+                addNewMessage={addNewMessage}
+                setName={setNameChat}
+                setMessage={setMessageChat}
+                name={nameChat}
+                message={messageChat}
             />
         </div>
     )

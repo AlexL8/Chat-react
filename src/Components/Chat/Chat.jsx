@@ -1,15 +1,11 @@
 import classNames from 'classnames';
 import React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { getRequest, postRequest, requestURL } from '../../Api';
+import { useEffect, useRef } from 'react';
 import Loader from '../Loader/Loader';
 import './Chat.css';
 
 
-const Chat = ({isActive, setActive, header, messages, isLoadingChatOpen, setUserMessages}) => {
-  const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const Chat = ({isActive, setActive, header, messages, isLoadingChat, addNewMessage, setName, setMessage, name, message}) => {
 
   const container = useRef(null);
   useEffect(() => {
@@ -17,34 +13,11 @@ const Chat = ({isActive, setActive, header, messages, isLoadingChatOpen, setUser
   }, [messages]);
 
 
-  const getMessages = async () => {
-    setIsLoading(true)
-    const messagesFromServer = await getRequest();
-    setUserMessages(messagesFromServer);
-    setIsLoading(false)
-  }
-
-  const addNewMessage = (e) => {
-    e.preventDefault()
-    const newMessage = {
-      name,
-      message
-    }
-    if (newMessage.name === '' || newMessage.message === '') {
-      alert('Заполни, ск, поля!')
-    } else {
-      postRequest(requestURL, newMessage)
-      getMessages()
-      }
-    setMessage('');
-    setName('');
-  } 
-
   return (
     <div className={classNames('chat', {'active': isActive})}>
       <div className="chat__content">
         <div className="chat__header">{header}</div>
-          {isLoadingChatOpen ? <Loader/> : <ul className="chat__message-list" ref={container}>
+          {isLoadingChat ? <Loader/> : <ul className="chat__message-list" ref={container}>
             {messages.map((message) => 
               <li className={classNames({
                 'chat__user-style-message': message.name !== 'admin',
@@ -70,7 +43,7 @@ const Chat = ({isActive, setActive, header, messages, isLoadingChatOpen, setUser
               type='text' 
               placeholder='Сообщение...'
               />
-          <button disabled={isLoading} className='chat__submit-btn' type='submit' onClick={addNewMessage}>Отправить</button>
+          <button disabled={isLoadingChat} className='chat__submit-btn' type='submit' onClick={addNewMessage}>Отправить</button>
         </form>
       </div>
     </div>
