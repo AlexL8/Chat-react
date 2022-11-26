@@ -11,7 +11,6 @@ export const getRequest = async () => {
 export const postRequest = async (url, data) => {
     const response = await axios.post(url, data);
     return response.data.response;
-   
 }
 
 

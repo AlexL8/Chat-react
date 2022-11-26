@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { getRequest, postRequest, requestURL } from './Api';
-import "./App.css";
 import Chat from "./Components/Chat/Chat";
 import Menu from "./Components/Menu/Menu";
+import "./App.css";
 
 
 const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 3, value: 'Услуги', href: '/service', icon: 'x'}, {id: 4, value: 'Магазин', href: '/shop', icon: 'x'}, {id: 5, value: 'О нас', href: '/about', icon: 'x'}, ];
@@ -13,8 +13,6 @@ function App () {
     const [isChatActive, setChatActive] = useState(false);
     const [isLoadingChat, setIsLoadingChat] = useState(false);
     const [userMessages, setUserMessages] = useState([]);
-    const [nameChat, setNameChat] = useState('');
-    const [messageChat, setMessageChat] = useState('');
 
 
     const setDataFromRequest = async () => {
@@ -23,7 +21,7 @@ function App () {
     }
 
     const openChat = async () => {
-        setChatActive(!isChatActive)
+        setChatActive(true)
         setIsLoadingChat(true)
         try {
            await setDataFromRequest()
@@ -37,32 +35,25 @@ function App () {
     }
 
     const closeChat = () => {
-        setChatActive(!isChatActive)
+        setChatActive(false)
     }
 
 
-    const addNewMessage = async (e) => {
-        e.preventDefault()
+    const addNewMessage = async (event, name, message, setName, stMessage) => {
+        event.preventDefault()
         setIsLoadingChat(true)
         const newMessage = {
-          name: nameChat,
-          message: messageChat
+          name,
+          message,
         }
         if (newMessage.name === '' || newMessage.message === '') return alert('Заполни, ск, поля!')
         await postRequest(requestURL, newMessage)
-        await setDataFromRequest()
+        // console.log(await postRequest(requestURL, newMessage));
+        await setDataFromRequest();
         setIsLoadingChat(false)
-        setMessageChat('');
-        setNameChat('');
+        setName('')
+        stMessage('')
       } 
-
-    
-    // useEffect(() => {
-    //     interval.current = setInterval(getMessages, 3000);
-    //     return () => {
-    //         clearInterval(interval.current)
-    //     };
-    // }); 
 
     return (
         <div className="app">
@@ -120,12 +111,7 @@ function App () {
                 header={'Чат поддержки'}
                 messages={userMessages}
                 isLoadingChat={isLoadingChat}
-                setUserMessages={setUserMessages}
                 addNewMessage={addNewMessage}
-                setName={setNameChat}
-                setMessage={setMessageChat}
-                name={nameChat}
-                message={messageChat}
             />
         </div>
     )
