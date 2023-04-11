@@ -39,20 +39,20 @@ function App () {
     }
 
 
-    const addNewMessage = async (event, name, message, setName, stMessage) => {
+    const addNewMessage = async (event, name, message, setName, setMessage) => {
         event.preventDefault()
         setIsLoadingChat(true)
         const newMessage = {
           name,
           message,
         }
-        if (newMessage.name === '' || newMessage.message === '') return alert('Заполни, ск, поля!')
+        if (newMessage.name === '' || newMessage.message === '') return alert('Заполни поля!')
         await postRequest(requestURL, newMessage)
         // console.log(await postRequest(requestURL, newMessage));
         await setDataFromRequest();
         setIsLoadingChat(false)
         setName('')
-        stMessage('')
+        setMessage('')
       } 
 
     return (

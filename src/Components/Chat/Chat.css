@@ -34,17 +34,27 @@ ol, ul {
 }
 
 .chat__header {
-    text-align: center;
+    /* text-align: center; */
+    display: flex;
+    justify-content: space-between;
     width: 100%;
     font-size: 1rem;
-    padding: 3px 0;
+    padding: 3px 5px;
     border-bottom: 1px solid black;
 }
 
-
+/* 
 @media screen and (max-width: 768px){
     .chat {
         width: 30vw;
         height: 40vh;
     }
 }
+@media screen and (max-width: 768px){
+    .menu__content {
+        width: 100%;
+    }
+    .blur {
+        backdrop-filter: none;
+    }
+} */

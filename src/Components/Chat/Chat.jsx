@@ -10,11 +10,13 @@ const Chat = ({isActive, setActive, header, messages, isLoadingChat, addNewMessa
   return (
     <div className={classNames('chat', {'active': isActive})}>
       <div className="chat__content">
-        <div className="chat__header">{header}</div>
+        <div className="chat__header">
+          <div className="chat__title">{header}</div>
+          </div>
           {isLoadingChat ? <Loader/> : <MessageList messages={messages}/>}
           <SendMessageForm 
-          isLoadingChat={isLoadingChat}
-          addNewMessage={addNewMessage}
+            isLoadingChat={isLoadingChat}
+            addNewMessage={addNewMessage}
           />
       </div>
     </div>
