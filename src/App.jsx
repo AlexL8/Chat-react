@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { getRequest, postRequest, requestURL } from './Api';
+import React, { useState, useEffect, useRef } from "react";
+import { getRequest, postRequest } from "./Api";
+import "./App.css";
 import Chat from "./Components/Chat/Chat";
 import Menu from "./Components/Menu/Menu";
-import "./App.css";
 
 
 const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 3, value: 'Услуги', href: '/service', icon: 'x'}, {id: 4, value: 'Магазин', href: '/shop', icon: 'x'}, {id: 5, value: 'О нас', href: '/about', icon: 'x'}, ];
@@ -11,48 +11,48 @@ const items = [{id: 2, value: 'Главная', href: '/main', icon: 'x'}, {id: 
 function App () {
     const [isMenuActive, setMenuActive] = useState(false);
     const [isChatActive, setChatActive] = useState(false);
-    const [isLoadingChat, setIsLoadingChat] = useState(false);
+    const [isLoadingChatOpen, setIsLoadingChatOpen] = useState(false);
     const [userMessages, setUserMessages] = useState([]);
+    const interval = useRef(null);
 
+    
+    const handleClickOpenChat = async () => {
+        setChatActive(!isChatActive)
 
-    const setDataFromRequest = async () => {
-        const messagesFromServer = await getRequest();
-        setUserMessages(messagesFromServer)
-    }
-
-    const openChat = async () => {
-        setChatActive(true)
-        setIsLoadingChat(true)
+        if (!isChatActive) {
+            setIsLoadingChatOpen(true)
         try {
-           await setDataFromRequest()
+            await getMessages();
         }
         catch (err) {
-            console.warn('Error: ' + err)
+            alert('Что-то пошло не так...' + err);
         }
         finally {
-            setIsLoadingChat(false)
+            setIsLoadingChatOpen(false)
+        }
         }
     }
 
-    const closeChat = () => {
-        setChatActive(false)
+    async function getMessages () {
+        const messagesFromServer = await getRequest();
+        setUserMessages(messagesFromServer);
     }
 
 
-    const addNewMessage = async (event, name, message, setName, setMessage) => {
+    const addNewMessage = async (event, name, message, setName, stMessage) => {
         event.preventDefault()
-        setIsLoadingChat(true)
+        setIsLoadingChatOpen(true)
         const newMessage = {
           name,
           message,
         }
-        if (newMessage.name === '' || newMessage.message === '') return alert('Заполни поля!')
+        if (newMessage.name === '' || newMessage.message === '') return alert('Заполни, ск, поля!')
         await postRequest(requestURL, newMessage)
         // console.log(await postRequest(requestURL, newMessage));
         await setDataFromRequest();
         setIsLoadingChat(false)
         setName('')
-        setMessage('')
+        stMessage('')
       } 
 
     return (
@@ -102,7 +102,7 @@ function App () {
                    sed rerum doloribus hic dolor voluptates ipsa repellat at quidem? Ea, eum inventore similique
                    cum maiores dolores doloremque?
                 </p>
-                <button className='chat-btn' onClick={!isChatActive ? openChat : closeChat}>Chat</button>
+                <button className='chat-btn' onClick={handleClickOpenChat}>Chat</button>
             </main>
             <Menu isActive={isMenuActive} setActive={setMenuActive} header={'Menu'} items={items}/>
             <Chat 
@@ -110,8 +110,8 @@ function App () {
                 setActive={setChatActive}
                 header={'Чат поддержки'}
                 messages={userMessages}
-                isLoadingChat={isLoadingChat}
-                addNewMessage={addNewMessage}
+                isLoadingChatOpen={isLoadingChatOpen}
+                setUserMessages={setUserMessages}
             />
         </div>
     )

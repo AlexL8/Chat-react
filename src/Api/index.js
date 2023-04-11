@@ -8,9 +8,8 @@ export const getRequest = async () => {
     return response;
 }
 
-export const postRequest = async (url, data) => {
-    const response = await axios.post(url, data);
-    return response.data.response;
+export const postRequest = (url, data) => {
+    axios.post(url, data)
 }
 
 
