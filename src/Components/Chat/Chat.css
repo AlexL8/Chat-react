@@ -11,8 +11,6 @@ ol, ul {
 .chat {
     position: fixed;
     background-color: #e6ced9;
-    /* max-height: calc(100% - 82px);
-    max-width: 400px; */
     height: calc(100% - 180px);
     max-width: 400px;
     bottom: 100px;

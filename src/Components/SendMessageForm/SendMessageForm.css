@@ -34,7 +34,7 @@ ol, ul {
 .chat__message-input {
     padding: 5px 10px;
     font-size: 0.8rem;
-    height: 35%;
+    min-height: 35%;
     margin: 0;
     width: 100%;
     background-color: #f8e6ee;
