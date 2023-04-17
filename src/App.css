@@ -67,11 +67,12 @@ nav {
     position: absolute;
   }
 
-  .chat-btn {
+  .chat-btnOpen {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #b08e9d;
+    font-weight: bold;
     opacity: 0.6;
     width: 50px;
     height: 50px;
@@ -82,6 +83,39 @@ nav {
     border: 1px solid black;
     border-radius: 10px 100px / 120px;
   }
+
+  .chat-btnClose {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #b08e9d;
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    color: #b08e9d;
+    border-radius: 10px 100px / 120px;
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  .chat-btnClose:before, .chat-btnClose:after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 4px;
+    background: black;
+  }
+
+.chat-btnClose:before {
+  transform: rotate(45deg);
+}
+
+.chat-btnClose:after {
+  transform: rotate(-45deg);
+}
   
 
 
